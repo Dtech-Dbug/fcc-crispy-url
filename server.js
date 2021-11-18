@@ -2,7 +2,6 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
-const validUrl = require("valid-url");
 const app = express();
 const mongoose = require("mongoose");
 // Basic Configuration
