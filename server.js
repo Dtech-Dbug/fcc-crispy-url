@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
+const dns = require("dns");
 const app = express();
 const mongoose = require("mongoose");
 // Basic Configuration
@@ -35,27 +36,37 @@ app.get("/api/hello", function (req, res) {
 });
 
 app.post("/api/shorturl", async (req, res) => {
+  console.log("hmm");
   try {
     let url = new URL(req.body.url);
     let originalUrl = req.body.url;
+
     let shortUrl = Math.floor(Math.random() * 1000);
     console.log("req recvd, processing");
 
-    // saving url
-    let savedUrl = await new Model({
-      originalUrl,
-      shortUrl,
-    }).save();
-    console.log(savedUrl);
+    // ! if url uses ftp protocol, throw error response
+    if (url.protocol === "ftp:") {
+      res.json({
+        error: "invalid url",
+      });
+    } else {
+      // saving url
+      let savedUrl = await new Model({
+        originalUrl,
+        shortUrl,
+      }).save();
+      console.log(savedUrl);
 
-    res.json({
-      original_url: originalUrl,
-      short_url: shortUrl,
-    });
+      res.json({
+        original_url: originalUrl,
+        short_url: shortUrl,
+      });
+    }
   } catch (e) {
-    // ! if invalid url
-    // ! typeerror is returned
-    // ! check instance of typeerrror
+    // if invalid url
+    // typeerror is returned
+    // check instance of typeerrror
+
     if (e instanceof TypeError)
       res.json({
         error: "invalid url",
