@@ -72,15 +72,15 @@ app.post("/api/shorturl", async (req, res) => {
         error: "invalid url",
       });
   }
+});
 
-  //redirect url
-  app.get("/api/shorturl/:short", async (req, res) => {
-    let short = req.params.short;
+//redirect url
+app.get("/api/shorturl/:short", async (req, res) => {
+  let short = req.params.short;
 
-    let search = await Model.findOne({ shortUrl: short }).exec();
-    console.log("search rsult", search);
-    res.redirect(search.originalUrl);
-  });
+  let search = await Model.findOne({ shortUrl: short }).exec();
+  console.log("search rsult", search);
+  res.redirect(search.originalUrl);
 });
 app.listen(port, function () {
   console.log(`Listening on port ${port}`);
